@@ -1,0 +1,80 @@
+<android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+    <RelativeLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:title="@string/title"
+                android:background="?colorPrimary"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent">
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/toolbar"
+                android:layout_above="@+id/controls_toolbar"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/controls_toolbar"
+                android:background="?attr/colorAccent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent">
+            <ImageButton
+                    android:id="@+id/pc_skip_prev"
+                    android:src="@drawable/ic_skip_previous_white_24dp"
+                    android:background="@drawable/list_item_background_color"
+                    android:padding="16dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:onClick="plrBtnCntrlr"
+                    android:layout_height="wrap_content"/>
+            <ImageButton
+                    android:id="@+id/pc_pause"
+                    android:src="@drawable/ic_pause_white_24dp"
+                    android:background="@drawable/list_item_background_color"
+                    android:padding="16dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="plrBtnCntrlr"/>
+            <ImageButton
+                    android:id="@+id/pc_play"
+                    android:src="@drawable/ic_play_arrow_white_24dp"
+                    android:background="@drawable/list_item_background_color"
+                    android:padding="16dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="plrBtnCntrlr"/>
+            <ImageButton
+                    android:id="@+id/pc_skip_next"
+                    android:src="@drawable/ic_skip_next_white_24dp"
+                    android:background="@drawable/list_item_background_color"
+                    android:padding="16dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:onClick="plrBtnCntrlr"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/nav_draw_menu"/>
+</android.support.v4.widget.DrawerLayout>
