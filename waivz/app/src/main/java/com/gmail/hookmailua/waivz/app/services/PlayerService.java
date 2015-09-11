@@ -1,7 +1,5 @@
 package com.gmail.hookmailua.waivz.app.services;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +10,15 @@ import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.gmail.hookmailua.waivz.app.R;
-import com.gmail.hookmailua.waivz.app.activities.MainActivity;
 import com.gmail.hookmailua.waivz.app.entities.Audiotrack;
+import com.gmail.hookmailua.waivz.app.fragments.MFragment;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Random;
 
 public class PlayerService
         extends
@@ -31,15 +28,15 @@ public class PlayerService
         MediaPlayer.OnCompletionListener,
         MediaPlayer.OnErrorListener {
 
-    private static final int NOTIFICATION_ID = 1;
     private final IBinder mBinder = new LocalBinder();
 
     WifiManager.WifiLock wifiLock;
     private MediaPlayer mediaPlayer;
     private int curPosition;
     private List<Audiotrack> trackList;
-    private ListIterator<Audiotrack> iterator;
-    private Audiotrack curAudiotrack;
+    private int trackId;
+    private Random randomGenerator;
+    private boolean isRandom;
 
     public PlayerService() {
         Log.i("mTag", "PlayerService, constructor");
@@ -56,6 +53,8 @@ public class PlayerService
 
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+
+        randomGenerator = new Random();
     }
 
     @Override
@@ -63,6 +62,14 @@ public class PlayerService
         Log.i("mTag", "PlayerService, onStartCommand");
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    /**
+     * Sat if playing is random
+     */
+    public boolean switchRandom(){
+        this.isRandom = !isRandom;
+        return isRandom;
     }
 
     /**
@@ -91,13 +98,12 @@ public class PlayerService
         if (playList != null) {
             trackList = playList;
 
-            if (trackId >= 0 && trackId < trackList.size()) {
+            if (trackId >= 0 && trackId < playList.size()) {
                 this.trackList = playList;
-                this.iterator = this.trackList.listIterator(trackId);
+                this.trackId = trackId;
 
-                if (iterator.hasNext()) {
-                    curAudiotrack = iterator.next();
-                    startPlaying(curAudiotrack.getUrl());
+                if (this.trackId >= 0 && this.trackId < trackList.size()) {
+                    startPlaying(trackList.get(this.trackId).getUrl());
                 }
             } else {
                 Log.i("mTag", "PlayerService, play(), trackId incorrect");
@@ -127,12 +133,27 @@ public class PlayerService
     public void skipNext() {
         Log.i("mTag", "PlayerService,skipNext()");
 
-        if (mediaPlayer != null) {
-            if (trackList != null && iterator != null) {
-                if (iterator.hasNext()) {
-                    curAudiotrack = iterator.next();
-                    startPlaying(curAudiotrack.getUrl());
-                }
+        if (mediaPlayer != null && trackList != null) {
+            if (trackId >= 0 && trackId < trackList.size() - 1) {
+                trackId++;
+                startPlaying(trackList.get(trackId).getUrl());
+            }
+        }
+    }
+
+    /**
+     * Skip to random track
+     */
+    private void skipRandomNext() {
+        Log.i("mTag", "PlayerService,skipRandomNext()");
+
+        if (mediaPlayer != null && trackList != null) {
+
+            if (trackId >= 0 && trackId < trackList.size()) {
+
+                trackId = randomGenerator.nextInt(trackList.size() - 1);
+
+                startPlaying(trackList.get(trackId).getUrl());
             }
         }
     }
@@ -143,12 +164,10 @@ public class PlayerService
     public void skipPrevious() {
         Log.i("mTag", "PlayerService, skipPrevious()");
 
-        if (mediaPlayer != null) {
-            if (trackList != null && iterator != null) {
-                if (iterator.hasPrevious()) {
-                    curAudiotrack = iterator.previous();
-                    startPlaying(curAudiotrack.getUrl());
-                }
+        if (mediaPlayer != null && trackList != null) {
+            if (trackId > 0 && trackId < trackList.size()) {
+                trackId--;
+                startPlaying(trackList.get(trackId).getUrl());
             }
         }
     }
@@ -189,7 +208,12 @@ public class PlayerService
         Log.i("mTag", "PlayerService, onCompletion()");
 
         stopForeground(true);
-        skipNext();
+
+        if (isRandom) {
+            skipRandomNext();
+        } else {
+            skipNext();
+        }
     }
 
     @Override
@@ -228,18 +252,13 @@ public class PlayerService
 
         mediaPlayer.start();
 
+        Intent intent = new Intent(MFragment.SET_SONG_TITLE);
+        intent.putExtra(MFragment.SONG_TITLE,
+                trackList.get(trackId).getArtist()+ " - " + trackList.get(trackId).getTitle());
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
         wifiLock.acquire();
-/*
-        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
-                new Intent(getApplicationContext(), MainActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification = new Notification();
-        notification.tickerText = "tickerText";
-        notification.icon = R.drawable.ic_album_white_24dp;
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        notification.contentIntent = pi;
-
-        startForeground(NOTIFICATION_ID, notification);*/
+        //todo create Notification
     }
 }

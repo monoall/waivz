@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightLightGreen">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/lightLightGreen"
+            android:padding="16dp"
+            android:text="@string/demo_text"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llb"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/lightGreen">
+
+        <ImageButton
+            android:id="@+id/pc_skip_prev"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/list_item_background_color"
+            android:contentDescription="@string/skip_next"
+            android:onClick="plrBtnCntrlr"
+            android:padding="16dp"
+            android:src="@drawable/ic_skip_previous_white_24dp" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/pc_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_item_background_color"
+                android:contentDescription="@string/play"
+                android:onClick="plrBtnCntrlr"
+                android:padding="16dp"
+                android:src="@drawable/ic_play_arrow_white_24dp" />
+
+            <ImageButton
+                android:id="@+id/pc_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/list_item_background_color"
+                android:contentDescription="@string/pause"
+                android:onClick="plrBtnCntrlr"
+                android:padding="16dp"
+                android:src="@drawable/ic_pause_white_24dp"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/pc_skip_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/list_item_background_color"
+            android:contentDescription="@string/skip_next"
+            android:onClick="plrBtnCntrlr"
+            android:padding="16dp"
+            android:src="@drawable/ic_skip_next_white_24dp" />
+
+    </LinearLayout>
+</LinearLayout>

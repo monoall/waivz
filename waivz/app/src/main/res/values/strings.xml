@@ -10,5 +10,9 @@
     <string name="title">Title...</string>
     <string name="subtitle">Sub Title...</string>
     <string name="default_position">0.</string>
+    <string name="demo_text">Text ...</string>
+    <string name="skip_next">Skip next</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
 
 </resources>

@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+
 import com.gmail.hookmailua.waivz.app.entities.Audiotrack;
 import com.gmail.hookmailua.waivz.app.fragments.LoginFragment;
 import com.gmail.hookmailua.waivz.app.fragments.MFragment;
@@ -136,27 +139,31 @@ public class MainActivity
     }
 
     public void plrBtnCntrlr(View view) {
-        switch (view.getId()) {
-            case R.id.pc_pause:
-                if (mBound) {
+        if (mBound) {
+            switch (view.getId()) {
+                case R.id.pc_pause:
                     mService.pause();
-                }
-                break;
-            case R.id.pc_play:
-                if (mBound) {
+                    break;
+                case R.id.pc_play:
                     mService.resume();
-                }
-                break;
-            case R.id.pc_skip_next:
-                if (mBound) {
+                    break;
+                case R.id.pc_skip_next:
                     mService.skipNext();
-                }
-                break;
-            case R.id.pc_skip_prev:
-                if (mBound) {
+                    break;
+                case R.id.pc_skip_prev:
                     mService.skipPrevious();
-                }
-                break;
+                    break;
+                /*
+                case R.id.pc_shuffle:
+                    boolean res = mService.switchRandom();
+                    Log.i("mTag", "MainActivity, rand mode is: " + res);
+
+                    break;
+                    */
+                case R.id.text:
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(MFragment.PC_TO_LARGE));
+                    break;
+            }
         }
     }
 
